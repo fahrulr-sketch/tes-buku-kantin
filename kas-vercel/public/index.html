@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f6f5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Buku Kas Harian</title>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><h1>📒 Buku Kas Harian</h1><div id="mode" style="font-size:12px;color:var(--mut)"></div></div>
+<div style="width:180px"><label>Bulan</label><input type="month" id="bulan"></div></div>
+
+<div class="card">
+<h2>Input transaksi</h2>
+<div class="grid">
+<div><label>Tanggal</label><input type="date" id="tgl"></div>
+<div><label>Jenis</label><div class="seg"><label><input type="radio" name="jn" value="in" checked>Pemasukan</label><label><input type="radio" name="jn" value="out">Pengeluaran</label></div></div>
+<div><label>Kategori</label><input id="kat" list="kl" placeholder="mis. Penjualan"></div>
+<div><label>Uraian / keterangan</label><input id="ket" placeholder="opsional"></div>
+<div id="wMet"><label>Metode penerimaan</label><select id="met"><option value="rekening">Rekening</option><option value="qris">QRIS</option><option value="cash">Cash</option></select></div>
+<div><label>Status</label><select id="sts"><option value="lunas">Lunas</option><option value="belum">Belum lunas</option></select></div>
+<div id="wPihak" class="hide"><label id="lPihak">Nama pelanggan</label><input id="pihak" placeholder="wajib untuk belum lunas"></div>
+<div><label>Jumlah (Rp)</label><input id="jml" type="text" inputmode="numeric" autocomplete="off" placeholder="0"></div>
+<div style="align-self:end"><button class="p" id="add" style="width:100%">+ Tambah</button></div>
+</div><datalist id="kl"></datalist>
+<div id="err" class="out" style="margin-top:6px"></div>
+</div>
+
+<div class="tabs" id="tabs">
+<button data-t="kas" class="on">Buku Kas Umum</button><button data-t="dash">Dashboard</button><button data-t="bh">Bagi Hasil</button><button data-t="pu">Piutang &amp; Utang</button><button data-t="xl">Unduh Excel</button>
+</div>
+
+<div class="sec on" id="kas"><div class="card"><h2>Buku Kas Umum — <span id="kasBln"></span></h2><p class="mut" style="margin:-4px 0 8px">Hanya transaksi lunas yang masuk kas (dicatat pada tanggal pelunasan). Yang belum lunas ada di tab Piutang &amp; Utang.</p><div class="sc" id="kasT"></div></div></div>
+
+<div class="sec" id="dash">
+<div class="grid" id="kpi" style="margin-bottom:12px"></div>
+<div class="card"><h2>Pemasukan vs pengeluaran per hari <span class="mut" style="font-weight:400">(<span class="in">■</span> masuk <span class="out">■</span> keluar)</span></h2><div class="sc"><div class="chart" id="chart"></div></div></div>
+<div class="grid"><div class="card"><h2>Pemasukan per kategori</h2><div id="cIn"></div></div><div class="card"><h2>Pengeluaran per kategori</h2><div id="cOut"></div></div></div>
+</div>
+
+<div class="sec" id="bh"><div class="card"><h2>Bagi hasil bulanan (dari laba bulanan)</h2>
+<div class="grid" style="margin-bottom:10px">
+<div><label>Pihak 1</label><input id="nA" value="Pihak 1"></div><div><label>Porsi Pihak 1 (%)</label><input id="pA" type="number" min="0" max="100" value="60"></div>
+<div><label>Pihak 2</label><input id="nB" value="Pihak 2"></div><div><label>Porsi Pihak 2 (%)</label><input id="pB" disabled></div></div>
+<div class="sc" id="bhT"></div>
+<p class="mut" style="margin:8px 0 0">Laba bulanan = total pemasukan − total pengeluaran dalam satu bulan (bulan terpilih ditandai). Jika rugi (laba ≤ 0), bagian kedua pihak = 0. Hanya transaksi lunas yang dihitung (berdasarkan tanggal pelunasan).</p></div></div>
+
+<div class="sec" id="pu"><div class="grid" id="puK" style="margin-bottom:12px"></div>
+<div class="card"><h2>Rekap piutang (pemasukan belum lunas)</h2><div class="sc" id="puIn"></div></div>
+<div class="card"><h2>Rekap utang (pengeluaran belum lunas)</h2><div class="sc" id="puOut"></div></div></div>
+
+<div class="sec" id="xl"><div class="card"><h2>Unduh laporan Excel (.xlsx)</h2>
+<label>Cakupan</label><select id="scope" style="max-width:260px"><option value="m">Bulan terpilih</option><option value="all">Semua data</option></select>
+<div style="margin-top:10px"><label>Pilih laporan (dijadikan sheet dalam satu file)</label>
+<label class="chk"><input type="checkbox" id="x1" checked> Rekening Koran</label>
+<label class="chk"><input type="checkbox" id="x2" checked> Laporan Penerimaan &amp; Pengeluaran</label>
+<label class="chk"><input type="checkbox" id="x3" checked> Bagi Hasil Bulanan (rekap 12 bulan dalam setahun)</label>
+<label class="chk"><input type="checkbox" id="x4" checked> Rekap Piutang &amp; Utang (semua yang belum lunas)</label></div>
+<button class="p" id="dl" style="margin-top:8px">⬇ Unduh Excel</button>
+<div id="dlMsg" class="mut" style="margin-top:8px"></div></div>
+<div class="card"><h2>Pengaturan</h2><div style="max-width:260px;margin-bottom:10px"><label>Nama kantin (judul laporan Excel)</label><input id="nk" placeholder="mis. Kantin Sehat"></div><div style="max-width:260px"><label>Saldo awal sebelum transaksi pertama (Rp)</label><input id="init" type="text" inputmode="numeric" autocomplete="off" value="0"></div>
+<button id="reset" class="g" style="margin-top:10px">Hapus semua data</button>
+<div style="margin-top:12px"><button id="imp" class="hide">Kirim data lokal (browser) ke database</button> <span id="impMsg" class="mut"></span> <a id="bk" class="hide" href="#">⬇ Unduh cadangan (.json)</a> <button id="imj" class="hide">Pulihkan dari file cadangan (.json)</button><input type="file" id="imf" accept=".json,application/json" class="hide"></div></div></div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

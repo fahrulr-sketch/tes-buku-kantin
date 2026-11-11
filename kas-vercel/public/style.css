@@ -1,0 +1,56 @@
+/* Buku Kas Harian - gaya tampilan. Warna ada di variabel :root di bagian atas. */
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f6f4;--card:#fff;--ink:#1c2321;--mut:#6b7570;--line:#e2e6e2;--acc:#1f6f5c;--in:#1f8a5b;--out:#c2443a;--soft:#eaf3ef}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121615;--card:#1b2120;--ink:#e8eeea;--mut:#8f9b95;--line:#2c3532;--acc:#4fb596;--in:#4fc58a;--out:#ee7a6f;--soft:#1f2b27}}
+:root[data-theme="dark"]{--bg:#121615;--card:#1b2120;--ink:#e8eeea;--mut:#8f9b95;--line:#2c3532;--acc:#4fb596;--in:#4fc58a;--out:#ee7a6f;--soft:#1f2b27}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0}h2{font-size:15px;margin:0 0 10px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--mut);margin-bottom:3px}
+input,select,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-width:100%}
+input,select{width:100%}
+button{cursor:pointer}button.p{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
+button.g{padding:3px 8px;color:var(--out)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.sec{display:none}.sec.on{display:block}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tfoot td{font-weight:700;border-top:2px solid var(--line)}
+.in{color:var(--in)}.out{color:var(--out)}
+.kpi{background:var(--soft);border-radius:10px;padding:10px 12px}
+.kpi b{display:block;font-size:17px;margin-top:2px;font-variant-numeric:tabular-nums}
+.seg{display:flex;gap:6px}.seg label{flex:1;margin:0;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;cursor:pointer}
+.seg input{display:none}.seg label:has(input:checked){background:var(--acc);color:#fff;border-color:var(--acc)}
+.chart{display:flex;align-items:flex-end;gap:4px;height:140px;min-width:100%;padding-top:6px}
+.col{flex:1;min-width:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bars{display:flex;align-items:flex-end;gap:1px;height:calc(100% - 16px);width:100%}
+.bars i{flex:1;border-radius:2px 2px 0 0;min-height:1px}
+.col small{font-size:10px;color:var(--mut);height:16px}
+.chk{display:flex;gap:8px;align-items:center;margin:6px 0;color:var(--ink);font-size:14px}.chk input{width:auto}
+.mut{color:var(--mut)}.empty{padding:18px;text-align:center;color:var(--mut)}.hide{display:none!important}
+@media (max-width:640px){
+.wrap{padding:12px}
+input,select,button{font-size:16px;min-height:42px}
+button.g{min-height:34px}
+.top{flex-direction:column;align-items:stretch}.top>div{width:100%!important}
+.tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px 12px;padding:0 12px}
+.tabs button{white-space:nowrap;flex:none}
+.grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+table.rt{min-width:0}
+table.rt thead{display:none}
+table.rt tr{display:block;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;padding:6px 10px}
+table.rt td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0;white-space:normal;text-align:right}
+table.rt td[data-label]::before{content:attr(data-label);color:var(--mut);text-align:left;flex:none}
+table.rt td:empty{display:none}
+table.rt td:not([data-label]){flex-wrap:wrap;justify-content:flex-end}
+table.rt tfoot tr{background:var(--soft)}
+}

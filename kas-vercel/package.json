@@ -1,0 +1,10 @@
+{
+  "name": "buku-kas-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Buku Kas Harian - versi Vercel (fungsi serverless + Neon Postgres)",
+  "engines": { "node": "22.x" },
+  "dependencies": {
+    "@neondatabase/serverless": ">=0.10.4"
+  }
+}
